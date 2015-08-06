@@ -1,0 +1,488 @@
+<h3>Objekt bearbeiten</h3>
+
+<hr />
+<?php $this->headScript()->captureStart() ?>
+var IPM_GLOBAL_ID = '<?php echo $this->file->getId(); ?>';
+<?php $this->headScript()->captureEnd() ?>
+
+<div ng-controller="FormCtrl">
+    <form name="sendefile_form" method="POST" novalidate action="<?php echo $this->url('sendefile', array('action' => 'editsendefile', 'id' => $this->file->getId()))  ?>" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="id" ng-model="id" ng-value="<?php echo $this->file->getId(); ?>">
+        <h4>Datei</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Dateiname</label>
+                    <input type="text" class="form-control" value="<?php echo $this->file->getName();?>" disabled="">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Storage</label>
+                    <input type="text" class="form-control" value="<?php echo $this->file->getStorage();?>" disabled="">
+                </div>
+            </div>
+            <?php if ('Finished' != $this->file->getFileIndex()->getStatus()): ?>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" name="status">
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('sf_status') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->file->getFileIndex()->getStatus()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        <hr />
+        <h4>Allgemeines</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Titel*</label>
+                    <input
+                    	ng-model="title"
+                        required=""
+                        type="text" 
+                        name="title" 
+                        class="form-control" 
+                        placeholder="Titel"
+                        <?php if (null != $this->file->getTitle()): ?>
+                            ng-init="title='<?php echo $this->file->getTitle() ?>'"
+                       		ng-value="<?php echo $this->file->getTitle() ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.title.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Produkt-Jahr*</label>
+                    <!-- pattern for year 1812 - 3048: -->
+                    <input
+                    	ng-model="product_year"
+                        required=""
+                        ng-pattern="/^(181[2-9]|18[2-9]\d|19\d\d|2\d{3}|30[0-3]\d|304[0-8])$/"
+                        type="text" 
+                        name="product_year" 
+                        class="form-control" 
+                        placeholder="Produkt-Jahr"
+                        <?php if (null != $this->file->getProductYear()): ?>
+                            ng-init="product_year='<?php echo $this->file->getProductYear() ?>'"
+                       		ng-value="<?php echo $this->file->getProductYear() ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.product_year.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-show="sendefile_form.product_year.$error.pattern">Kein gültiges Jahr</span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h4>Material</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Genre*</label>
+                    <select 
+                        class="form-control" 
+                        name="genre" required="" 
+                        ng-model="genre" 
+                        ng-value="<?php echo $this->file->getGenre() ?>"
+                        ng-init="genre='<?php echo $this->file->getGenre() ?>'"
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('genre') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->file->getGenre()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="sendefile_form.genre.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Sport-Typ*</label>
+                    <select 
+                        class="form-control" 
+                        name="sport_type" 
+                        required="" 
+                        ng-model="sport_type" 
+                        ng-value="<?php echo $this->file->getSportType() ?>"
+                        ng-init="sport_type='<?php echo $this->file->getSportType() ?>'"
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('sport_type') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->file->getSportType()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="sendefile_form.sport_type.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Runtime*</label>
+                    <input
+                    	ng-model="run_time"
+                        disabled=""
+                        type="text" 
+                        name="run_time" 
+                        class="form-control" 
+                        placeholder="Runtime"
+                        <?php if (null != $this->file->getRunTime()): ?>
+                       		ng-value="<?php echo $this->file->getRunTime() ?>"
+                            ng-init="run_time='<?php echo $this->file->getRunTime() ?>'"
+                        <?php endif; ?>
+                    >
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Land*</label>
+                    <select
+                        class="form-control"
+                        name="country" required="" 
+                        ng-model="country" 
+                        ng-value="<?php echo $this->file->getCountry() ?>"
+                        ng-init="country='<?php echo $this->file->getCountry() ?>'"
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('country') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->file->getCountry()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="sendefile_form.country.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Lizenz-Geber (Licensors)</label>
+                    <input
+                    	ng-model="licensors"
+                        type="text" 
+                        name="licensors"
+                        required=""
+                        class="form-control" 
+                        placeholder="Lizenz-Geber"
+                        <?php if (null != $this->file->getLicensors()): ?>
+                       		ng-value="<?php echo $this->file->getLicensors() ?>"
+                            ng-init="licensors='<?php echo $this->file->getLicensors() ?>'"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.licensors.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Copyright</label>
+                    <input
+                    	ng-model="copyright"
+                        type="text" 
+                        name="copyright"
+                        required=""
+                        class="form-control" 
+                        placeholder="Copyright"
+                        <?php if (null != $this->file->getCopyright()): ?>
+                       		ng-value="<?php echo $this->file->getCopyright() ?>"
+                            ng-init="copyright='<?php echo $this->file->getCopyright() ?>'"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.copyright.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <select 
+                        class="form-control" 
+                        name="rating" required="" 
+                        ng-model="rating" 
+                        ng-init="rating='<?php echo $this->file->getRating() ?>'"
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('rating') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->file->getCountry()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="sendefile_form.rating.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Start*</label>
+                    <input
+                    	ng-model="license_start"
+                        required=""
+                        type="text" 
+                        name="license_start" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Start"
+                        <?php if (null != $this->file->getLicenseStart()): ?>
+                       		ng-value="<?php echo $this->file->getLicenseStart()->format('d.m.Y') ?>"
+                            ng-init="license_start='<?php echo $this->file->getLicenseStart()->format('d.m.Y') ?>'"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.legalaffiars_from.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group" >
+                    <label>Lizenz-Ende</label>
+                    <?php if (null != $this->file->getLicenseEnd() && $this->file->getLicenseEnd()->format('Y-m-d') != '-0001-11-30'): ?>
+                        <br /><input type="checkbox" name="no_legalaffiars_to"  ng-model="no_legalaffiars_to" ng-init="no_legalaffiars_to=false" ng-checked="no_legalaffiars_to" /> Kein Lizenzende       
+                    <?php else: ?>
+                        <br /><input type="checkbox" name="no_legalaffiars_to"  ng-model="no_legalaffiars_to" ng-init="no_legalaffiars_to=true" ng-checked="no_legalaffiars_to" /> Kein Lizenzende           
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="no_legalaffiars_to" ng-show="no_legalaffiars_to==false">
+                <div class="form-group">
+                    <label>Lizenz-Ende (Datum)*</label>
+                    <input
+                        ng-model="license_end"
+                        ng-required="!no_legalaffiars_to" 
+                        type="text"
+                        name="license_end" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Ende (Datum)"
+                        <?php if (null != $this->file->getLicenseEnd() && $this->file->getLicenseEnd()->format('Y-m-d') != '-0001-11-30'): ?>
+                            ng-value="<?php echo $this->file->getLicenseEnd()->format('d.m.Y'); ?>"
+                            ng-init="license_end='<?php echo $this->file->getLicenseEnd()->format('d.m.Y') ?>'"
+                        <?php else: ?>
+                             ng-init="license_end='00.00.0000'"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.license_end.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes</label>
+                    <?php if (null != $this->file->getLegalRuntime()): ?>
+                        <br /><input type="checkbox" name="unlimited_runtime"  ng-model="unlimited_runtime" ng-init="unlimited_runtime=false" ng-checked="unlimited_runtime" value="y" ng-change="changUnlimited()"/> Unendlich          
+                    <?php else: ?>
+                        <br /><input type="checkbox" name="unlimited_runtime"  ng-model="unlimited_runtime" ng-init="unlimited_runtime=true" ng-checked="unlimited_runtime" value="y" /> Unendlich            
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="unlimited_runtime" ng-show="unlimited_runtime==false">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes (Anzahl)*</label>
+                    <input
+                        ng-model="legal_runtime"
+                        ng-required="!unlimited_runtime" 
+                        type="text" 
+                        name="legal_runtime" 
+                        class="form-control" 
+                        placeholder="Lizenz-Runtimes (Anzahl)"
+                        <?php if (null != $this->file->getLegalRuntime()): ?>
+                            ng-value="<?php echo $this->file->getLegalRuntime(); ?>" 
+                            ng-init="legal_runtime='<?php echo $this->file->getLegalRuntime() ?>'"
+                        <?php else: ?>
+                             ng-value="0"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="sendefile_form.legal_runtime.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <h4>Tags*</h4>
+        <textarea required="" class="form-control" ng-model="content_tags" ng-init="content_tags='<?php echo $this->file->getContentTags() ?>'" rows="3" name="content_tags"><?php if (null != $this->file->getContentTags()): ?><?php echo trim($this->file->getContentTags()); ?><?php endif; ?></textarea>
+        <span ng-show="sendefile_form.content_tags.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+        <hr>
+        <div id='sfdescription_zone'>
+            <h3>Beschreibung</h3>
+            <?php if ($this->file->getSfDescriptions()->count()): ?>
+                <?php foreach ($this->file->getSfDescriptions() as $sfDescription): ?>
+                    <div class="row" id="sfdescription_zone_<?php echo $sfDescription->getId() ?>">
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group" >
+                                <label>Beschreibung*</label>
+                                <textarea 
+                                    required="" 
+                                    ng-model="sfdescription_<?php echo $sfDescription->getId() ?>_long_description" type="text"
+                                    name="sfdescription[<?php echo $sfDescription->getId() ?>][long_description]" 
+                                    class="form-control" 
+                                    placeholder="Beschreibung"
+                                    ng-init="sfdescription_<?php echo $sfDescription->getId() ?>_long_description='<?php echo $sfDescription->getLongDescription(); ?>'"
+                                >
+                                </textarea>
+                                <span ng-show="!sfdescription_<?php echo $sfDescription->getId() ?>_long_description">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group" >
+                                <label>Sprache*</label>
+                                <select
+                                    class="form-control" 
+                                    name="sfdescription[<?php echo $sfDescription->getId() ?>][language]"
+                                    required="" 
+                                    ng-model="sfdescription_language_<?php echo $sfDescription->getId() ?>"
+                                    ng-init="sfdescription_language_<?php echo $sfDescription->getId() ?>='<?php echo $sfDescription->getLanguage() ?>'"
+                                >
+                                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('sf_language') as $optIndex => $optName): ?>
+                                        <?php if ($optIndex == $sfDescription->getLanguage()): ?>
+                                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <span ng-show="!sfdescription_language_<?php echo $sfDescription->getId() ?>">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group" >
+                                <label>Beschreibungstyp*</label>
+                                <select
+                                    class="form-control" 
+                                    name="sfdescription[<?php echo $sfDescription->getId() ?>][type]"
+                                    required="" 
+                                    ng-model="sfdescription_type_<?php echo $sfDescription->getId() ?>" 
+                                    ng-init="sfdescription_type_<?php echo $sfDescription->getId() ?>='<?php echo $sfDescription->getType() ?>'"
+                                >
+                                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('sf_description') as $optIndex => $optName): ?>
+                                        <?php if ($optIndex == $sfDescription->getType()): ?>
+                                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <span ng-show="!sfdescription_type_<?php echo $sfDescription->getId() ?>">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-1 col-md-1">
+                            <div class="form-group">
+                                <label></label>
+                                <div class="ipm_rm_bnt btn btn-default glyphicon glyphicon-remove form-control" ng-click="softRemoveSfDescription('sfdescription_zone_<?php echo $sfDescription->getId() ?>', <?php echo $sfDescription->getId() ?>)">  </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+        </div>
+        <sf-description></sf-description>
+        <hr>
+        
+        <div id='sffighter_zone'>
+            <h3>Käpmpfer</h3>
+            <?php if ($this->file->getFighters()->count()): ?>
+                <?php foreach ($this->file->getFighters() as $fighter): ?>
+                    <div class="row" id="sffighter_zone_<?php echo $fighter->getId() ?>">
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group" >
+                                <label>Name*</label>
+                                <input
+                                    type="hidden"
+                                    required=""
+                                    class="fighter"
+                                    name="sffighter[<?php echo $fighter->getId() ?>][id]"
+                                    value="<?php echo $fighter->getId() ?>"
+                                >
+                                <input
+                                    required="" 
+                                    ipm-autocomplete 
+                                    type="text"
+                                    name="sffighter[<?php echo $fighter->getId() ?>][fullname]" 
+                                    class="form-control" 
+                                    placeholder="Kämpfer"
+                                    ng-model="sffighter_fullname_<?php echo $fighter->getId() ?>"
+                                    ng-init="sffighter_fullname_<?php echo $fighter->getId() ?>='<?php echo $fighter->getFullname() . ' (' . $fighter->getId() . ')'?>'"
+                                    >
+                                <span ng-show="!sffighter_fullname_<?php echo $fighter->getId() ?>">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>                        
+                        </div>
+                        <div class="col-xs-1 col-md-1">
+                            <div class="form-group">
+                                <label></label>
+                                <div class="ipm_rm_bnt btn btn-default glyphicon glyphicon-remove form-control" ng-click="softRemoveSfFighter('sffighter_zone_<?php echo $fighter->getId() ?>', <?php echo $fighter->getId() ?>)">  </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <sf-fighter></sf-fighter>
+        
+        <hr>
+        
+        <div id='sfartwork_zone'>
+            <h3>Artwork</h3>
+            <?php if ($this->file->getArtwork()->count()): ?>
+                <?php foreach ($this->file->getArtwork() as $artwork): ?>
+                    <div class="row" ng-controller="IpmUploadCtrl" ng-hide="softRemove">
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="" value="<?php echo $artwork->getFileName() ?>"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group">
+                                <select
+                                    class="form-control"
+                                    disabled=""
+                                    ng-model="file_type" 
+                                    ng-value="<?php echo $this->file->getCountry() ?>"
+                                    ng-init="file_type='<?php echo $artwork->getFileType() ?>'"
+                                >
+                                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('file_upload_type') as $optIndex => $optName): ?>
+                                        <?php if ($optIndex == $artwork->getFileType()): ?>
+                                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group">
+                                <div class="btn btn-warning" ng-click="removeFile(<?php echo $artwork->getId() ?>)">Löschen</div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+        </div>
+        <sf-artwork></sf-artwork>
+        <hr>
+        <input type="submit" class="btn btn-default" ng-disabled="sendefile_form.$invalid" value="Speichern">
+    </form>
+</div>
+
+<hr />
+<a href="<?php 
+            echo $this->url(
+                'sendefile', 
+                array(
+                    'action' => 'xml',
+                    'id' => $this->file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Xml herunterladen</div></a>

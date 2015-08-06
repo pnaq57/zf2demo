@@ -1,0 +1,25 @@
+<h3>Material suchen</h3>
+<p>Durchsuchen Sie das in der Datenbank hinterlegte Material.</p>
+<hr />
+<div ng-controller="FormCtrl">
+    <form name="archive_file_form" novalidate method="POST" action="<?php echo $this->url('archivefile', array('action' => 'search'))  ?>">
+		<?php echo $this->partial('partials/application/form/search/file-info.phtml') ?>
+        <hr />
+		<?php echo $this->partial('partials/application/form/search/general-info.phtml') ?>
+        <hr />
+        <?php echo $this->partial('partials/application/form/search/material-info.phtml') ?>
+        <hr />
+        <?php echo $this->partial('partials/application/form/search/fight-info.phtml') ?>
+        <hr />
+        <h4>Tags</h4>
+        <textarea class="form-control" rows="3" name="tags" placeholder="Tags"></textarea>
+        <hr />
+        <?php echo $this->partial('partials/application/form/search/moment.phtml') ?>
+        <hr />
+        <?php echo $this->partial('partials/application/form/search/interview.phtml') ?>
+        <hr />
+        <input type="submit" class="btn btn-default" ng-disabled="archive_file_form.$invalid" value="Material suchen">
+    </form>
+
+</div>
+

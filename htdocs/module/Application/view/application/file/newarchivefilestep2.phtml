@@ -1,0 +1,16 @@
+<h3>Objekt angelegt</h3>
+<p>Das Objekt wurde erfolgreich angelegt.</p>
+<hr />
+<p>Geben Sie beim Ingest-Prozess den folgenden Dateinamen an. Nur durch das korrekte bennenen der Datei kann später eine direkte Relation hergestellt werden.</p>
+<p>Dateiname: <span><?php echo $this->archiveFile->getName()?></span></p>
+<p>Storage: <span><?php echo $this->archiveFile->getStorage()?></span></p>
+<a href="<?php 
+    echo $this->url(
+        'archivefile', 
+        array(
+            'action' => 'editarchivefile',
+            'id' => $this->archiveFile->getId()
+        )
+    )  ?>">
+    <div class="btn btn-default">Weiter</div>
+</a>

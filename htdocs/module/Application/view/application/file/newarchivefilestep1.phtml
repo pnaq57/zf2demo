@@ -1,0 +1,46 @@
+<h3>Objekt anlegen</h3>
+<p>Von hier aus können neue Objekte im Onlinearchiv angelegt werden.</p>
+<hr />
+<h4>Basisinformationen festlegen</h4>
+<form ng-controller="FormCtrl" name="archive_file_form" method="POST" action="<?php echo $this->url('archivefile', array('action' => 'newarchivefilestep1'))  ?>">
+    <div class="row">
+        <div class="col-xs-6 col-md-6">
+            <div class="form-group">
+                <label>Tape*</label>
+                <input type="text" name="path" ng-model="path" class="form-control" placeholder="Tape" required="">
+                <span ng-show="archive_file_form.path.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+            </div>
+        </div>
+        <div class="col-xs-6 col-md-6">
+            <div class="form-group">
+                <label>Source*</label>
+                <select class="form-control" name="source" required="" ng-model="source">
+                    <option></option>
+                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('source') as $optIndex => $optName): ?>
+                        <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <span ng-show="archive_file_form.source.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-md-6">
+            <div class="form-group">
+                <label>1. Kämpfer*</label>          
+                <input type="text" ng-model="fighter_a" class="fighterAuto form-control" placeholder="1. Kämpfer" required="">
+                <input type="hidden" name="fighter_a" ng-model="fighter_a" class="form-control fighter" required="">
+                <span ng-show="archive_file_form.fighter_a.$error.required">Dieses Feld ist ein Pflichtfeld.</span>                
+            </div>
+        </div>
+        <div class="col-xs-6 col-md-6">
+            <div class="form-group">
+                <label>2. Kämpfer*</label>
+                <input type="text" ng-model="fighter_b" class="fighterAuto form-control" placeholder="2. Kämpfer" required="">
+                <input type="hidden" name="fighter_b" ng-model="fighter_b" class="form-control fighter" required="">
+                <span ng-show="archive_file_form.fighter_b.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+            </div>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-default" ng-disabled="archive_file_form.$invalid" value="Weiter">
+</form>

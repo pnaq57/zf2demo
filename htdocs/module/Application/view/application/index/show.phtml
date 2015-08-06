@@ -1,0 +1,53 @@
+
+<a href="<?php echo $this->url('changelog', array('action' => 'new', 'id' => $projectId))?>">
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        NEW
+    </button>
+</a>
+
+<?php if ($changeLogs): ?>
+    <table class="table">
+        <thead>
+            <tr>
+              <th>id</th>
+              <th>Projectname (Id)</th>
+              <th>log</th>
+              <th>version</th>
+              <th>createdAt</th>
+              <th>createdAt</th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php if (!empty($changeLogs) && (int)$changeLogs[0]['projectId'] > 0): ?>
+    <?php foreach($changeLogs as $changelog): ?>
+        <tr>
+          <td><?php echo $changelog['changeLogId']; ?></td>
+          <td><?php echo $changelog['name'] . ' ('. $changelog['id'] . ')' ?></td>
+          <td><?php echo $changelog['log']; ?></td>
+          <td><?php echo $changelog['version']; ?></td>
+          <td><?php echo $changelog['createdAt']; ?></td>
+          <td>
+                <a href="<?php echo $this->url('changelog', array('action' => 'edit')) . '/' . $changelog['changeLogId']; ?>">
+                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                        Edit
+                    </button>
+                </a>
+                <a href="<?php 
+                    echo $this->url('changelog',
+                        array(
+                            'action' => 'delete', 'id' => $changelog['changeLogId'], 'projectId' => $projectId)); ?>">
+                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                        Delete
+                    </button>
+                </a>
+          </td>
+        </tr>
+    <?php endforeach; ?>
+    <?php endif ?>
+    </tbody>
+          <tr>
+              <td></td>
+          </tr>
+      </table>
+<?php endif; ?>

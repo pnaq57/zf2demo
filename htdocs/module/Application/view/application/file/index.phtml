@@ -1,0 +1,113 @@
+<h3>Archiv-Dateien</h3>
+<p>Auf dieser Seite sehen Sie alle verfügbaren Archiv-Dateien.</p>
+<hr />
+<?php echo $this->partial(
+    'partials/application/form/filter/filterforpagination.phtml',
+    array(
+        'filterAction' => 'archivefiles',
+        'route' => 'archivefiles',
+        'status' => $this->status,
+        'limit' => $this->limit
+    )); ?>
+<hr />
+<?php $paging = $this->paginationHelper($this->pagedArchiveFiles, $this->page, '/archivefiles/', $this->limit, $this->status); ?>
+<?php if (!empty($paging)): ?>
+    <div class="paging">    
+        <?php echo $paging; ?>
+    </div>
+    <hr />
+<?php endif; ?> 
+<?php $statusOptions = array_merge(
+    \Application\Form\OptionsConfig::getFormOption('status'),
+    \Application\Form\OptionsConfig::getFormOption('sf_status'),
+    \Application\Form\OptionsConfig::getFormOption('not_remove_status')); ?> 
+<?php if (isset($this->pagedArchiveFiles) && count($this->pagedArchiveFiles) > 0): ?>
+
+<table ng-hide="createFileBnt" class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Kämpfer</th>
+          <th>Erstellungszeitpunkt</th>
+          <th>Status</th>
+          <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->pagedArchiveFiles as $archiveFile): ?>
+    <tr>
+        <td><?php echo $archiveFile->getId() ?></td>
+        <td><?php echo $archiveFile->getFighterA()->getFullname() ?> / <?php echo $archiveFile->getFighterB()->getFullname() ?></td>
+        <td><?php echo $archiveFile->getFileIndex()->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+        <td><?php echo $statusOptions[$archiveFile->getFileIndex()->getStatus()] ?></td>
+        <td>
+            <?php if (!in_array($archiveFile->getFileIndex()->getStatus(), array('ConvertInProgress'))): ?>
+        	<a href="<?php 
+            echo $this->url(
+                'archivefile', 
+                array(
+                    'action' => 'editarchivefile',
+                    'id' => $archiveFile->getId()
+                )
+            )  ?>"><div class="btn btn-default">Bearbeiten</div></a>
+            <?php endif; ?>
+            <?php if ($archiveFile->getFileIndex()->getStatus() == 'New'):?>
+                <a href="<?php 
+                echo $this->url(
+                    'archivefile', 
+                    array(
+                        'action' => 'editarchivefile',
+                        'id' => $archiveFile->getId(),
+                        'status' => 'IngestInProgress'
+                    )
+                )  ?>"><div class="btn btn-default">Ingest starten</div></a>
+            <?php endif; ?>
+            <?php if ($archiveFile->getFileIndex()->getStatus() == 'IngestDone'):?>
+                <a href="<?php 
+                echo $this->url(
+                    'archivefile', 
+                    array(
+                        'action' => 'editarchivefile',
+                        'id' => $archiveFile->getId(),
+                        'status' => 'CutInProgress'
+                    )
+                )  ?>"><div class="btn btn-default">Cut starten</div></a>
+            <?php endif; ?>
+            <?php if (in_array($archiveFile->getFileIndex()->getStatus(), array('Finished', 'ConvertInProgress'))):?>
+            <a href="<?php 
+            echo $this->url(
+                'archivefile', 
+                array(
+                    'action' => 'showarchivefile',
+                    'id' => $archiveFile->getId()
+                )
+            )  ?>"><div class="btn btn-default">Details</div></a>
+            <?php endif; ?>
+            <?php if (!in_array($archiveFile->getFileIndex()->getStatus(), array('ConvertInProgress'))): ?>
+            <a href="<?php 
+            echo $this->url(
+                'archivefile', 
+                array(
+                    'action' => 'deactivate',
+                    'id' => $archiveFile->getId()
+                )
+            )  ?>"><div class="btn btn-default">Deaktivieren</div></a>
+            <a href="<?php 
+            echo $this->url(
+                'archivefile', 
+                array(
+                    'action' => 'remove',
+                    'id' => $archiveFile->getId()
+                )
+            )  ?>"><div class="btn btn-default">Löschen</div></a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
+
+<div class="paging">
+    <?php echo $paging; ?>
+</div>

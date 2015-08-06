@@ -1,0 +1,50 @@
+<?php 
+    $route = $this->route;
+    $action = !empty($this->action) ? $this->action : array();
+    $filterFormUrl = $this->url($route, $action);
+?>
+<h4>Filter</h4>
+<form action="<?php echo $filterFormUrl; ?>" method="POST">
+    <div class="row">
+        <?php if (!$this->disableStatus): ?>
+        <div class="col-xs-2 col-md-2">
+            <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" name="status">
+                    <option></option>
+                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('filter_status') as $optIndex => $optName): ?>
+                        <?php if ($optIndex == $this->status): ?>
+                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <?php endif ?>
+        <div class="col-xs-2 col-md-2">
+            <div class="form-group">
+                <label>Limit</label>
+                <select class="form-control" name="limit">
+                    <option></option>
+                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('limit') as $optIndex => $optName): ?>
+                        <?php if ($optIndex == $this->limit): ?>
+                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-2 col-md-2">
+            <div class="form-group">
+                <label></label>
+                <input type="submit" class="btn btn-default form-control" value="Filtern">
+            </div>
+        </div>
+        
+    </div>
+    
+</form>

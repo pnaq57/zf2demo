@@ -1,0 +1,86 @@
+<h3>Sende-Dateien</h3>
+<p>Auf dieser Seite sehen Sie alle verfügbaren Sende-Dateien.</p>
+<hr />
+ <?php
+    echo $this->partial(
+        'partials/application/form/filter/filterforpagination.phtml',
+        array(
+            'filterAction' => 'sendefiles',
+            'limit' => $this->limit
+         )); ?>
+<hr />
+<?php $paging = $this->paginationHelper($this->pagedFiles, $this->page, '/sendefiles/', $this->limit, $this->status); ?>
+
+<?php if (!empty($paging)): ?>
+    <div class="paging">    
+        <?php echo $paging; ?>
+    </div>
+    <hr />
+<?php endif; ?> 
+
+<?php if (isset($this->pagedFiles) && count($this->pagedFiles) > 0): ?>
+<table ng-hide="createFileBnt" class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Dateiname</th>
+          <th>Titel</th>
+          <th>Status</th>
+          <th>Erstellungszeitpunkt</th>
+          <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->pagedFiles as $file): ?>
+    <tr>
+        <td><?php echo $file->getId() ?></td>
+        <td><?php echo $file->getName() ?></td>
+        <td><?php echo $file->getTitle() ?></td>
+        <td><?php echo $file->getFileIndex()->getStatus() ?></td>
+        <td><?php echo $file->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+        <td>
+            <?php if (!in_array($file->getFileIndex()->getStatus(), array('ConvertInProgress'))): ?>
+        	<a href="<?php 
+            echo $this->url(
+                'sendefile', 
+                array(
+                    'action' => 'editsendefile',
+                    'id' => $file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Bearbeiten</div></a>
+            <?php endif; ?>
+
+            <?php if (in_array($file->getFileIndex()->getStatus(), array('Finished', 'ConvertInProgress'))):?>
+            <a href="<?php 
+            echo $this->url(
+                'sendefile', 
+                array(
+                    'action' => 'showsendefile',
+                    'id' => $file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Details</div></a>
+            <?php endif; ?>
+            <?php if (!in_array($file->getFileIndex()->getStatus(), array('ConvertInProgress'))): ?>
+            <a href="<?php 
+            echo $this->url(
+                'sendefile', 
+                array(
+                    'action' => 'deactivate',
+                    'id' => $file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Deaktivieren</div></a>
+            <a href="<?php 
+            echo $this->url(
+                'sendefile', 
+                array(
+                    'action' => 'remove',
+                    'id' => $file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Löschen</div></a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>

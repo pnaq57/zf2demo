@@ -1,0 +1,738 @@
+<h3>Objekt bearbeiten</h3>
+<p>Bearbeiten Sie hier den Kampf <b><?php echo $this->archiveFile->getFighterA()->getFullname() ?></b> vs. <b><?php echo $this->archiveFile->getFighterB()->getFullname() ?></b>.</p>
+<hr />
+<div ng-controller="FormCtrl">
+    <form name="archive_file_form" method="POST" novalidate action="<?php echo $this->url('archivefile', array('action' => 'editarchivefile'))  ?>">
+        <input type="hidden" name="id" value="<?php echo $this->archiveFile->getId(); ?>">
+        <h4>Datei</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Dateiname</label>
+                    <input type="text" class="form-control" value="<?php echo $this->archiveFile->getName();?>" disabled="">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Storage</label>
+                    <input type="text" name="storage" class="form-control" value="<?php echo $this->archiveFile->getStorage();?>" disabled="">
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h4>Allgemeines</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Quelle</label>
+                    <input type="text" name="source" class="form-control" value="<?php echo $this->archiveFile->getSource();?>" disabled="">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Tape</label>
+                    <input type="text" name="path" class="form-control" value="<?php echo $this->archiveFile->getPath();?>" disabled="">
+                </div>
+            </div>
+            <?php if ('Finished' != $this->archiveFile->getFileIndex()->getStatus()): ?>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" name="status">
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('status') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getFileIndex()->getStatus()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+		<hr />
+        <h4>Material</h4>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                	<label>TC Start (HH:MM:SS:FF)*</label>
+                    <input
+                        ng-blur="tc_start=changeTimeCode(tc_start)"
+                        ng-model="tc_start"
+                        type="text" 
+                        name="tc_start"
+                        required=""
+                        class="form-control" 
+                        placeholder="TC Start (HH:MM:SS:FF)"
+                        <?php if (null != $this->archiveFile->getTcStart()): ?>
+                        	ng-init="tc_start='<?php echo $this->archiveFile->getTcStart() ?>'"
+                        	value="<?php echo $this->archiveFile->getTcStart(); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.tc_start.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-if="archive_file_form.tc_start.$viewValue.length<8">Es werden 8 Zeichen benötigt.</span>
+                    <span ng-if="archive_file_form.tc_start.$viewValue.length>11">Es werden 8 Zeichen benötigt.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>TC Ende (HH:MM:SS:FF)*</label>
+                    <input
+                        ng-blur="tc_end=changeTimeCode(tc_end)"
+                        ng-model="tc_end"
+                        type="text" 
+                        name="tc_end"
+                        required=""
+                        class="form-control" 
+                        placeholder="TC Ende (HH:MM:SS:FF)"
+                        <?php if (null != $this->archiveFile->getTcEnd()): ?>
+                       		ng-init="tc_end='<?php echo $this->archiveFile->getTcEnd() ?>'"
+                        	value="<?php echo $this->archiveFile->getTcEnd(); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.tc_end.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-if="archive_file_form.tc_end.$viewValue.length<8">Es werden 8 Zeichen benötigt.</span>
+                    <span ng-if="archive_file_form.tc_end.$viewValue.length>11">Es werden 8 Zeichen benötigt.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                <label>TC Dauer (HH:MM:SS:FF)*</label>
+                    <input
+                        ng-blur="length=changeTimeCode(length)"
+                        ng-model="length"
+                        type="text" 
+                        name="length"
+                        required=""
+                        class="form-control" 
+                        placeholder="TC Dauer (HH:MM:SS:FF)"
+                        <?php if (null != $this->archiveFile->getLength()): ?>
+                       		ng-init="length='<?php echo $this->archiveFile->getLength() ?>'"
+                        	value="<?php echo $this->archiveFile->getLength(); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.length.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-if="archive_file_form.length.$viewValue.length<8">Es werden 8 Zeichen benötigt.</span>
+                    <span ng-if="archive_file_form.length.$viewValue.length>11">Es werden 8 Zeichen benötigt.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Start*</label>
+                    <input
+                    	ng-model="legalaffiars_from"
+                        required=""
+                        type="text" 
+                        name="legalaffiars_from" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Start"
+                        <?php if (null != $this->archiveFile->getLegalaffiarsFrom()): ?>
+                       		ng-init="legalaffiars_from='<?php echo $this->archiveFile->getLegalaffiarsFrom()->format('d.m.Y') ?>'"
+                        	value="<?php echo $this->archiveFile->getLegalaffiarsFrom()->format('d.m.Y'); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.legalaffiars_from.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group" >
+                    <label>Lizenz-Ende</label>
+                    <?php if (null != $this->archiveFile->getLegalaffiarsTo() && $this->archiveFile->getLegalaffiarsTo()->format('Y-m-d') != '-0001-11-30'): ?>
+                        <br /><input type="checkbox" name="no_legalaffiars_to"  ng-model="no_legalaffiars_to" ng-init="no_legalaffiars_to=false" ng-checked="no_legalaffiars_to" /> Kein Lizenzende       
+                    <?php else: ?>
+                        <br /><input type="checkbox" name="no_legalaffiars_to"  ng-model="no_legalaffiars_to" ng-init="no_legalaffiars_to=true" ng-checked="no_legalaffiars_to" /> Kein Lizenzende           
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="no_legalaffiars_to" ng-show="no_legalaffiars_to==false">
+                <div class="form-group">
+                    <label>Lizenz-Ende (Datum)*</label>
+                    <input
+                        ng-model="legalaffiars_to"
+                        ng-required="!no_legalaffiars_to" 
+                        type="text" 
+                        name="legalaffiars_to" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Ende (Datum)"
+                        <?php if (null != $this->archiveFile->getLegalaffiarsTo() && $this->archiveFile->getLegalaffiarsTo()->format('Y-m-d') != '-0001-11-30'): ?>
+                            ng-init="legalaffiars_to='<?php echo $this->archiveFile->getLegalaffiarsTo()->format('d.m.Y'); ?>'"
+                            value="<?php echo $this->archiveFile->getLegalaffiarsTo()->format('d.m.Y'); ?>"                            
+                        <?php else: ?>
+                            ng-init="legalaffiars_to=''"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.legalaffiars_to.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes</label>
+                    <?php if (null != $this->archiveFile->getLegalRuntime()): ?>
+                        <br /><input type="checkbox" name="unlimited_runtime"  ng-model="unlimited_runtime" ng-init="unlimited_runtime=false" ng-checked="unlimited_runtime" value="y" ng-change="changUnlimited()"/> Unendlich          
+                    <?php else: ?>
+                        <br /><input type="checkbox" name="unlimited_runtime"  ng-model="unlimited_runtime" ng-init="unlimited_runtime=true" ng-checked="unlimited_runtime" value="y" /> Unendlich            
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="unlimited_runtime" ng-show="unlimited_runtime==false">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes (Anzahl)*</label>
+                    <input
+                        ng-model="legal_runtime"
+                        ng-required="!unlimited_runtime" 
+                        type="text" 
+                        name="legal_runtime" 
+                        class="form-control" 
+                        placeholder="Lizenz-Runtimes (Anzahl)"
+                        <?php if (null != $this->archiveFile->getLegalRuntime()): ?>
+                            ng-init="legal_runtime='<?php echo $this->archiveFile->getLegalRuntime(); ?>'"
+                            value="<?php echo $this->archiveFile->getLegalRuntime(); ?>"                            
+                        <?php else: ?>
+                            ng-init="legal_runtime='0'"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.legal_runtime.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                    <label>Kommentar</label>
+					<br />
+                    <label class="checkbox-inline">
+						<?php if ('y' == $this->archiveFile->getComment()): ?>
+                        <input name="comment" type="checkbox" ng-change="commentChange(comment)" data-toggle="toggle" value="y" ng-init="commentChecked=true" ng-model="commentChecked" ng-checked="commentChecked" >
+                        <?php else: ?>
+                            <input name="comment" class="checkbox" ng-change="commentChange(comment)" type="checkbox" data-toggle="toggle" value="y" ng-init="commentChecked=false" ng-model="commentChecked" ng-checked="commentChecked">
+                        <?php endif; ?>
+                         Ja
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="commentChecked" ng-hide="commentChecked==false">
+                <div class="form-group">
+                	<label>Sprache*</label>
+                    <select class="form-control" name="comment_lang" ng-disabled="commentChecked==false" disabled ng-required="commentChecked" ng-model="comment_lang" ng-init="comment_lang='<?php echo $this->archiveFile->getCommentLang() ?>'" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>                    
+                            <?php if ($optIndex == $this->archiveFile->getCommentLang()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.comment_lang.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="commentChecked" ng-hide="commentChecked==false">
+                <div class="form-group">
+                	<label>Channel*</label>
+                    <select class="form-control" name="comment_audio_channel" ng-disabled="commentChecked==false" disabled ng-required="commentChecked" ng-model="comment_audio_channel" ng-init="comment_audio_channel='<?php echo $this->archiveFile->getCommentAudioChannel() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('comment_audio_channel') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getCommentAudioChannel()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.comment_audio_channel.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                	<label>Graphic</label>
+					<?php if ('y' == $this->archiveFile->getGraphic()): ?>
+                    <input name="graphic" type="checkbox" data-toggle="toggle" value="y" ng-init="graphicChecked=true" ng-model="graphicChecked" ng-checked="graphicChecked">
+                    <?php else: ?>
+                        <input name="graphic" class="checkbox" type="checkbox" data-toggle="toggle" value="y" ng-init="graphicChecked=false" ng-model="graphicChecked" ng-checked="graphicChecked" >
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="graphicChecked" ng-hide="graphicChecked==false">
+                <div class="form-group">
+                	<label>Graphic comment</label>
+                    <input
+                        ng-init="graphic_input='<?php echo $this->archiveFile->getGraphicInput() ?>'"
+                        ng-model="graphic_input"
+                        type="text" 
+                        name="graphic_input"
+                        class="form-control" 
+                        placeholder="Graphic comment"
+                        <?php if (null != $this->archiveFile->getGraphicInput()): ?>
+                            value="<?php echo $this->archiveFile->getGraphicInput(); ?>"
+                        <?php endif; ?>
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                 <div class="form-group">
+                     <label>Sound*</label>
+                        <select class="form-control" name="sound" required="" ng-model="sound" ng-init="sound='<?php echo $this->archiveFile->getSound() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('sound') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getSound()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.sound.$error.required">Dieses Feld ist ein Pflichtfeld.</span>       
+                </div>
+            </div>
+             <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Scale*</label>
+                    <select class="form-control" name="scale" required="" ng-model="scale" ng-init="scale='<?php echo $this->archiveFile->getScale() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('scale') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getScale()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.scale.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Resolution*</label>
+                    <select class="form-control" name="resolution" required="" ng-change="resolutionChange(resolution)" ng-model="resolution" ng-init="resolution='<?php echo $this->archiveFile->getResolution() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('resolution') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getResolution()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.resolution.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" ng-show="resolution == 'other'">
+                    <label>Resolution (other)*</label>
+                    <input
+                        type="text" 
+                        name="resolution_input"
+                        id="resolution_input"
+                        ng-model="resolution_input"
+                         ng-required="resolution == 'other'" 
+                        class="form-control" 
+                        placeholder="Resolution (other)"
+                        <?php if (null != $this->archiveFile->getResolutionInput()): ?>
+                            ng-init="resolution_input='<?php echo $this->archiveFile->getResolutionInput() ?>'"
+                            value="<?php echo $this->archiveFile->getResolutionInput(); ?>"
+                        <?php else: ?>
+                            ng-init="resolution_input=null"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.resolution_input.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+		<hr />
+        <h4>Kampf</h4>
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    <label>1. Kämpfer</label>
+                    <input
+                        disabled=""
+                        type="text"
+                        class="form-control"
+                        <?php if (null != $this->archiveFile->getFighterA()): ?>
+                            value="<?php echo $this->archiveFile->getFighterA()->getFullname(); ?>"
+                        <?php endif; ?>
+                    >
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    <label>2. Kämpfer</label>
+                    <input 
+                        type="text"
+                        disabled=""
+                        class="form-control"
+                        <?php if (null != $this->archiveFile->getFighterB()): ?>
+                            value="<?php echo $this->archiveFile->getFighterB()->getFullname() ?>"
+                        <?php endif; ?>
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Date of fight*</label>
+                    <input 
+                    	ng-model="fight_date"
+                        type="text" 
+                        name="fight_date"
+                        required=""
+                        class="form-control ipm_datepicker" 
+                        placeholder="Date of fight"
+                        <?php if (null != $this->archiveFile->getFightDate()): ?>
+                        	ng-init="fight_date='<?php echo $this->archiveFile->getFightDate()->format('d.m.Y') ?>'"
+                            value="<?php echo $this->archiveFile->getFightDate()->format('d.m.Y'); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.fight_date.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Location of fight*</label>
+                   <input 
+                   		ng-model="fight_where"
+                        type="text" 
+                        name="fight_where"
+                        required=""
+                        class="form-control" 
+                        placeholder="Location of fight"
+                        <?php if (null != $this->archiveFile->getFightWhere()): ?>
+                         	ng-init="fight_where='<?php echo $this->archiveFile->getFightWhere() ?>'"
+                            value="<?php echo $this->archiveFile->getFightWhere(); ?>"
+                        <?php endif; ?>
+                    >
+                    <span ng-show="archive_file_form.fight_where.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Gender*</label>
+                    <select class="form-control" name="gender" required="" ng-model="gender" ng-init="gender='<?php echo $this->archiveFile->getGender() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('gender') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getGender()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.gender.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Type of fight*</label>
+                    <select class="form-control" name="fight_type" ng-model="fight_type" required="" ng-init="fight_type='<?php echo $this->archiveFile->getFightType() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('fight_type') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getFightType()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.fight_type.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Rounds of fight*</label>
+                     <select class="form-control" name="rounds" required="" ng-model="rounds" ng-init="rounds='<?php echo $this->archiveFile->getRounds() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('rounds') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getRounds()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.rounds.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <label>Weightclass*</label>
+                    <select class="form-control" name="weight_class" required="" ng-model="weight_class" ng-init="weight_class='<?php echo $this->archiveFile->getWeightClass() ?>'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('weight_class') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getWeightClass()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.weight_class.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label>Titlefight*</label>       
+                    <select size="7" class="form-control" multiple
+                            ng-multiple="true"
+                            ng-init="fight_title=<?php echo htmlspecialchars(json_encode($this->archiveFile->getFightTitle()))  ?>"
+                            ng-model="fight_title"
+                            name="fight_title"
+                            required=""
+                            ng-options="key as title for (key,title) in <?php echo htmlspecialchars(json_encode(\Application\Form\OptionsConfig::getFormOption('fight_title')))  ?>">
+                    </select>
+                    <select size="7" multiple
+                        ng-options="key as title for (key,title) in <?php echo htmlspecialchars(json_encode(\Application\Form\OptionsConfig::getFormOption('fight_title')))  ?>"
+                        style="display:none;"
+                        name="fight_title[]"
+                        ng-model="fight_title">
+                    </select>
+                    <span ng-show="archive_file_form.fight_title.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label>Winner*</label>
+                    <select class="form-control" name="winner" required="" ng-model="winner"  ng-init="winner='<?php echo $this->archiveFile->getWinner() ?>'">
+                        <option></option> 
+                        <?php if ($this->archiveFile->getWinner() == 'Draw'): ?>
+                            <option value="Draw" selected>Draw</option>
+                        <?php else: ?>
+                            <option value="Draw">Draw</option>
+                        <?php endif; ?>
+                        
+                        <?php if ($this->archiveFile->getWinner() == $this->archiveFile->getFighterA()->getFullname()): ?>
+                            <option value="<?php echo $this->archiveFile->getFighterA()->getFullname() ?>" selected> <?php echo $this->archiveFile->getFighterA()->getFullname(); ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $this->archiveFile->getFighterA()->getFullname() ?>"> <?php echo $this->archiveFile->getFighterA()->getFullname(); ?></option>
+                        <?php endif; ?>
+                        
+                        <?php if ($this->archiveFile->getWinner() == $this->archiveFile->getFighterB()->getFullname()): ?>
+                            <option value="<?php echo $this->archiveFile->getFighterB()->getFullname() ?>" selected> <?php echo $this->archiveFile->getFighterB()->getFullname(); ?></option>
+                        <?php else: ?>
+                            <option value="<?php echo $this->archiveFile->getFighterB()->getFullname() ?>"> <?php echo $this->archiveFile->getFighterB()->getFullname(); ?></option>
+                        <?php endif; ?>
+                    </select>
+                    <span ng-show="archive_file_form.winner.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label>Result*</label>
+                    <select class="form-control" name="result" ng-model="result" required="" ng-init="result='<?php echo $this->archiveFile->getResult() ?>'" ng-change="resultChange(result, archive_file_form.result_round)">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('result') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getResult()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.result.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" ng-show="result=='KO' || result=='TKO'">
+                    <label>Round (KO/TKO)*</label>
+                    <select class="form-control" name="result_round" ng-required="result == 'KO' || result == 'TKO'" ng-model="result_round" ng-init="result_round='<?php echo $this->archiveFile->getResultRound() ?>'" ng-disabled="result!='KO' && result!='TKO'">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('result_round') as $optIndex => $optName): ?>
+                            <?php if ($optIndex == $this->archiveFile->getResultRound()): ?>
+                                <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <span ng-show="archive_file_form.result_round.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+        </div>
+		<hr />
+		<h4>Tags*</h4>
+        <textarea required="" class="form-control" ng-model="tags" ng-init="tags='<?php echo $this->archiveFile->getTags() ?>'" rows="3" name="tags"><?php if (null != $this->archiveFile->getTags()): ?><?php echo trim($this->archiveFile->getTags()); ?><?php endif; ?></textarea>
+		<span ng-show="archive_file_form.tags.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+        <hr />
+		<h4>Moments</h4>
+        <div id='marker_zone'>
+            <?php if ($this->archiveFile->getTapes()->count()): ?>
+                <?php foreach ($this->archiveFile->getTapes() as $tape): ?>
+                    <div class="row ng-scope" id="marker_zone_<?php echo $tape->getId() ?>">
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                            	<label>Typ*</label>
+                                <input type="hidden" name="actions[<?php echo $tape->getId() ?>][id]" value="<?php echo $tape->getId() ?>">
+                                <select 
+                                    class="form-control" 
+                                    name="actions[<?php echo $tape->getId() ?>][action]" 
+                                    required="" 
+                                    ng-model="actions_<?php echo $tape->getId() ?>_action"
+                                    ng-init="actions_<?php echo $tape->getId() ?>_action='<?php echo $tape->getAction() ?>'"
+                                >
+                                    <option></option>
+                                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('marker') as $optIndex => $optName): ?>
+                                        <?php if ($optIndex == $tape->getAction()): ?>
+                                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <span ng-show="!actions_<?php echo $tape->getId() ?>_action">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                            	<label>TC (HH:MM:SS:FF)*</label>
+                                <input
+                                    required=""
+                                    type="text" 
+                                    name="actions[<?php echo $tape->getId() ?>][action_from]"
+                                    ng-blur="actions_<?php echo $tape->getId() ?>_action_from=changeTimeCode(actions_<?php echo $tape->getId() ?>_action_from)"
+                                    ng-model="actions_<?php echo $tape->getId() ?>_action_from"
+                                    ng-init="actions_<?php echo $tape->getId() ?>_action_from='<?php echo $tape->getActionFrom() ?>'"
+                                    class="form-control" 
+                                    placeholder="TC (HH:MM:SS:FF)"
+                                    value="<?php echo $tape->getActionFrom() ?>"
+                                >
+                                <span ng-if="actions_<?php echo $tape->getId() ?>_action_from.length == undefined || actions_<?php echo $tape->getId() ?>_action_from.length<8">Es werden 8 Zeichen benötigt.</span>
+                                <span ng-if="actions_<?php echo $tape->getId() ?>_action_from.length>11">Es werden 8 Zeichen benötigt.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                            	<label>Kommentar</label>
+                                <input
+                                    type="text" 
+                                    name="actions[<?php echo $tape->getId() ?>][comment]"
+                                    ng-model="actions_<?php echo $tape->getId() ?>_comment"
+                                    ng-init="actions_<?php echo $tape->getId() ?>_comment='<?php echo $tape->getComment() ?>'"
+                                    class="form-control" 
+                                    placeholder="Kommentar"
+                                    value="<?php echo $tape->getComment() ?>"
+                                >
+                            </div>
+                        </div>
+                        <div class="col-xs-1 col-md-1">
+                            <div class="form-group">
+                                <label></label>
+                                <div class="ipm_rm_bnt btn btn-default glyphicon glyphicon-remove form-control" ng-click="softRemoveMarker('marker_zone_<?php echo $tape->getId() ?>', <?php echo $tape->getId() ?>)"> </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <ipm-add-marker></ipm-add-marker>
+		<hr />
+		<h4>Interviews</h4>
+        <div id='interviews_zone'>
+            <?php if ($this->archiveFile->getInterviews()->count()): ?>
+                <?php foreach ($this->archiveFile->getInterviews() as $interview): ?>
+                    <div class="row ng-scope" id="interviews_zone_<?php echo $interview->getId() ?>">
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                                <input type="hidden" name="interviews[<?php echo $interview->getId() ?>][id]" value="<?php echo $interview->getId() ?>">
+                                <label>Partner*</label>
+                                <input 
+                                    type="text"
+                                    required=""
+                                    ng-init="interviews_<?php echo $interview->getId() ?>_fighter='<?php echo $interview->getFighter() ?>'"
+                                    ng-model="interviews_<?php echo $interview->getId() ?>_fighter"
+                                    name="interviews[<?php echo $interview->getId() ?>][fighter]" 
+                                    class="form-control" 
+                                    placeholder="Partner"
+                                    value="<?php echo $interview->getFighter() ?>"
+                                >
+                                <span ng-show="!interviews_<?php echo $interview->getId() ?>_fighter">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                                <label>TC Start (HH:MM:SS:FF)*</label>
+                                <input 
+                                    type="text"
+                                    required=""
+                                    ng-init="interviews_<?php echo $interview->getId() ?>_action_in='<?php echo $interview->getActionIn() ?>'"
+                                    ng-blur="interviews_<?php echo $interview->getId() ?>_action_in=changeTimeCode(interviews_<?php echo $interview->getId() ?>_action_in)"
+                                    ng-model="interviews_<?php echo $interview->getId() ?>_action_in"
+                                    name="interviews[<?php echo $interview->getId() ?>][action_in]" 
+                                    class="form-control" 
+                                    placeholder="TC Start (HH:MM:SS:FF)"
+                                    value="<?php echo $interview->getActionIn() ?>"
+                                >
+                                <span ng-if="interviews_<?php echo $interview->getId() ?>_action_in.length == undefined || interviews_<?php echo $interview->getId() ?>_action_in.length<8">Es werden 8 Zeichen benötigt.</span>
+                                <span ng-if="interviews_<?php echo $interview->getId() ?>_action_in.length>11">Es werden 8 Zeichen benötigt.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <div class="form-group">
+                                <label>TC Ende (HH:MM:SS:FF)*</label>
+                                <input 
+                                    type="text"
+                                    required=""
+                                    ng-init="interviews_<?php echo $interview->getId() ?>_action_out='<?php echo $interview->getActionOut() ?>'"
+                                    ng-blur="interviews_<?php echo $interview->getId() ?>_action_out=changeTimeCode(interviews_<?php echo $interview->getId() ?>_action_out)"
+                                    ng-model="interviews_<?php echo $interview->getId() ?>_action_out"
+                                    name="interviews[<?php echo $interview->getId() ?>][action_out]" 
+                                    class="form-control" 
+                                    placeholder="TC Ende (HH:MM:SS:FF)"
+                                    value="<?php echo $interview->getActionIn() ?>"
+                                >
+                                <span ng-if="interviews_<?php echo $interview->getId() ?>_action_out.length == undefined || interviews_<?php echo $interview->getId() ?>_action_out.length<8">Es werden 8 Zeichen benötigt.</span>
+                                <span ng-if="interviews_<?php echo $interview->getId() ?>_action_out.length>11">Es werden 8 Zeichen benötigt.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <div class="form-group">
+                                <label>Sprache*</label>
+                                <select 
+                                    class="form-control" 
+                                    name="interviews[<?php echo $interview->getId() ?>][language]" 
+                                    required="" 
+                                    ng-model="interviews_<?php echo $interview->getId() ?>_language"
+                                    ng-init="interviews_<?php echo $interview->getId() ?>_language='<?php echo $interview->getLanguage(); ?>'"
+                                >
+                                    <option></option>
+                                    <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>
+                                        <?php if ($optIndex == $interview->getLanguage()): ?>
+                                            <option value="<?php echo $optIndex; ?>" selected> <?php echo $optName; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <span ng-show="!interviews_<?php echo $interview->getId() ?>_language">Dieses Feld ist ein Pflichtfeld.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-1 col-md-1">
+                            <div class="form-group">
+                            <label></label>
+                            <div class="ipm_rm_bnt btn btn-default glyphicon glyphicon-remove form-control"
+                                 ng-click="softRemoveInterview('interviews_zone_<?php echo $interview->getId() ?>', <?php echo $interview->getId() ?>)"> </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <ipm-add-interview></ipm-add-interview>
+        <hr />
+        <input type="submit" class="btn btn-default" ng-disabled="archive_file_form.$invalid" value="Änderungen speichern">
+    </form>
+</div>

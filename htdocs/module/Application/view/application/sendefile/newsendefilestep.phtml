@@ -1,0 +1,42 @@
+<h3>Objekt anlegen</h3>
+<p>Von hier aus können neue Objekte im Onlinearchiv angelegt werden.</p>
+<hr />
+<h4>Basisinformationen festlegen</h4>
+<div ng-controller="FormCtrl">
+    <form name="sendefile_form" method="POST" novalidate action="<?php echo $this->url('sendefile', array('action' => 'newsendefilestep1'))  ?>" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Titel*</label>
+                    <input
+                    	ng-model="title"
+                        required=""
+                        type="text" 
+                        name="title" 
+                        class="form-control" 
+                        placeholder="Titel"
+                     >
+                    <span ng-show="sendefile_form.title.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Produkt-Jahr*</label>
+                    <!-- pattern for year 1812 - 3048: -->
+                    <input
+                    	ng-model="product_year"
+                        required=""
+                        ng-pattern="/^(181[2-9]|18[2-9]\d|19\d\d|2\d{3}|30[0-3]\d|304[0-8])$/"
+                        type="text" 
+                        name="product_year" 
+                        class="form-control" 
+                        placeholder="Produkt-Jahr"
+                    >
+                    <span ng-show="sendefile_form.product_year.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-show="sendefile_form.product_year.$error.pattern">Kein gültiges Jahr</span>
+                </div>
+            </div>
+        </div>
+        
+        <input type="submit" class="btn btn-default" ng-disabled="sendefile_form.$invalid" value="Weiter">
+    </form>

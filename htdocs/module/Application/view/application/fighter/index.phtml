@@ -1,0 +1,76 @@
+<h3>Kämpfer verwalten</h3> 
+<p>Von hier aus können Sie neue Kämpfer anlegen und bereits angelegte Kämpfer bearbeiten.</p>
+<hr />
+<a href="<?php 
+    echo $this->url(
+            'fighter', 
+            array('action' => 'new')
+        )  ?>">
+    <div class="btn btn-default">Kämpfer anlegen</div>
+</a>
+<hr />
+<?php 
+    echo $this->partial(
+        'partials/application/form/filter/filterforpagination.phtml',
+        array(
+            'filterAction' => 'fighters',
+            'limit' => $this->limit,
+            'disableStatus' => true
+        )); 
+
+?>
+<hr />
+<?php $paging = $this->paginationHelper($this->fighters, $this->page, '/fighters/', $this->limit); ?>
+<?php if (!empty($paging)): ?>
+    <div class="paging">    
+        <?php echo $paging; ?>
+    </div>
+    <hr />
+<?php endif; ?> 
+<?php if ($this->fighters): ?>
+<table ng-hide="createFileBnt" class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Vorname</th>
+          <th>Nachname</th>
+          <th>Vollständiger Name</th>
+          <th>Kürzel</th>
+          <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->fighters as $fighter): ?>
+         <tr>
+            <td><?php echo $fighter->getId() ?></th>
+            <td><?php echo $fighter->getFirstname() ?></td>
+            <td><?php echo $fighter->getLastname() ?></td>
+            <td><?php echo $fighter->getFullname() ?></td>
+            <td><?php echo $fighter->getLastnameShortcut() ?></td>
+            <td>
+                <a href="<?php 
+                    echo $this->url(
+                        'fighter', 
+                        array(
+                            'action' => 'edit',
+                            'id' => $fighter->getId()
+                        )
+                    )  ?>">
+                    <div class="btn btn-default">Kämpfer bearbeiten</div>
+                </a>
+                <a href="<?php 
+                    echo $this->url(
+                        'fighter', 
+                        array(
+                            'action' => 'remove',
+                            'id' => $fighter->getId()
+                        )
+                    )  ?>">
+                    <div class="btn btn-default">Kämpfer löschen</div>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php  endif; ?>

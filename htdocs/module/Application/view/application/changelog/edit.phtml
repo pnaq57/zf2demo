@@ -1,0 +1,24 @@
+<a href="javascript:history.back()">
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        Back
+    </button>
+</a>
+
+<form role="form" action="<?php echo $this->url('changelog', array('action' => 'edit')); ?>" method="POST">
+    <input type="hidden" name="projectId" value="<?php echo $changeLog['projectId']?>">
+    <input type="hidden" name="id" value="<?php echo $changeLog['changeLogId']?>">
+  <div class="form-group">
+    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter editor (aqn/ms)" value="<?php echo $changeLog['name']?>" disabled="disabled">
+  </div>
+  <div class="form-group">
+    <input type="text" name="editor" class="form-control" id="exampleInputEmail1" placeholder="Enter editor (aqn/ms)" value="<?php echo $changeLog['editor']?>" >
+  </div>
+      <div class="form-group">
+    <input type="text" name="version" class="form-control" id="exampleInputEmail1" placeholder="Enter Version (like 0.0.1)" value="<?php echo $changeLog['version']?>">
+  </div>
+  <div class="form-group">
+    <textarea placeholder="Logtext" name="log" class="form-control" rows="3"><?php echo $changeLog['log']?></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

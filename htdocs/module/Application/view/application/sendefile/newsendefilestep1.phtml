@@ -1,0 +1,15 @@
+<h3>Objekt angelegt</h3>
+<p>Das Objekt wurde erfolgreich angelegt.</p>
+<hr />
+<p>Dateiname: <span><?php echo $this->file->getName()?></span></p>
+<p>Storage: <span><?php echo $this->file->getStorage()?></span></p>
+<a href="<?php 
+    echo $this->url(
+        'sendefile', 
+        array(
+            'action' => 'editsendefile',
+            'id' => $this->file->getId()
+        )
+    )  ?>">
+    <div class="btn btn-default">Weiter</div>
+</a>

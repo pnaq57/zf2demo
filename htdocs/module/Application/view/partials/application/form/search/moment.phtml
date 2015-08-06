@@ -1,0 +1,26 @@
+<h4>Moments</h4>
+
+<div class="row" >
+    <div class="col-xs-6 col-md-6">
+        <div class="form-group">
+            <label>Typ</label>
+            <select class="form-control" name="marker[action]">
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('marker') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-6" >
+        <div class="form-group">
+            <label>Kommentar</label>
+            <input
+                type="text" 
+                name="marker[comment]"
+                class="form-control" 
+                placeholder="Kommentar"
+            >
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<h2><?php echo ($this->title) ?: 'Datei hochladen' ?></h2>
+
+<?php
+// Init Form
+$form = $this->form;
+$form->setAttribute('class', 'form-horizontal');
+$form->setAttribute('action', $this->url('file-upload', array('action' => 'singleupload')));
+$form->prepare();
+// Configure Errors Helper
+$errorsHelper  = $this->plugin('formelementerrors');
+$errorsHelper
+    ->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>');
+?>
+<?php echo $this->form()->openTag($form); ?>
+    
+    <?php
+    $elem = $form->get('file_type');
+    $elem->setLabelAttributes(array('class' => 'control-label'));
+    $errors = $elem->getMessages();
+    $errorClass = (!empty($errors)) ? ' error' : '';
+    ?>
+<div class="row">
+    <div class="col-xs-2 col-md-2">
+         <div class="control-group<?php echo $errorClass ?>">
+            <div class="controls">
+                <?php echo $this->formSelect($elem); ?>
+                <?php echo $errorsHelper($elem); ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-6">
+        <?php
+            $elem = $form->get('file');
+            $elem->setLabelAttributes(array('class' => 'control-label'));
+            $errors = $elem->getMessages();
+            $errorClass = (!empty($errors)) ? ' error' : '';
+        ?>
+        <div class="control-group<?php echo $errorClass ?>">
+            <div class="controls">
+                <?php echo $this->formFile($elem); ?>
+                <?php echo $errorsHelper($elem); ?>
+                <?php if (!empty($this->tempFiles)) { ?>
+                    <!--
+                    Note: You might not want to render the file input in this
+                    case either, depending on your use-case.
+                    -->
+                    <div class="help-block">
+                        Uploaded: <ul>
+                        <?php foreach ($this->tempFiles as $tempFile) { ?>
+                            <li><?php echo $this->escapeHtml($tempFile['name']) ?></li>
+                        <?php } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-2 col-md-2">
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag($form); ?>
+
+<hr/>
+
+<?php if (isset($this->uploadedFiles) && count($this->uploadedFiles) > 0): ?>
+<h4>Die bereits hochgeladenen Dateien</h4>
+<table ng-hide="createFileBnt" class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Dateiname</th>
+          <th>Erstellungszeitpunkt</th>
+          <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->uploadedFiles as $file): ?>
+    <tr>
+        <td><?php echo $file->getId() ?></td>
+        <td><?php echo $file->getFileName() ?></td>
+        <td><?php echo $file->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+        <td>
+        	<a href="<?php 
+            echo $this->url(
+                'file-upload', 
+                array(
+                    'action' => 'edit',
+                    'id' => $file->getId()
+                )
+            )  ?>"><div class="btn btn-default">Bearbeiten</div></a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>

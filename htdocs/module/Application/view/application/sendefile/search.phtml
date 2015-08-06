@@ -1,0 +1,296 @@
+<h3>Objekt suchen</h3>
+
+<hr />
+
+<div ng-controller="FormCtrl">
+    <form name="sendefile_form" method="POST" novalidate action="<?php echo $this->url('sendefile', array('action' => 'search')) ?>" enctype="multipart/form-data">
+        <h4>Datei</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Dateiname</label>
+                    <input type="text" class="form-control" name="name">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Storage</label>
+                    <input type="text" class="form-control" name="storage">
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h4>Allgemeines</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Titel</label>
+                    <input
+                        type="text" 
+                        name="title"
+                        placeholder="Titel"
+                        class="form-control" 
+                    >
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Produkt-Jahr</label>
+                    <!-- pattern for year 1812 - 3048: -->
+                    <input
+                    	ng-model="product_year"
+                        ng-pattern="/^(181[2-9]|18[2-9]\d|19\d\d|2\d{3}|30[0-3]\d|304[0-8])$/"
+                        type="text" 
+                        name="product_year" 
+                        class="form-control" 
+                        placeholder="Produkt-Jahr"
+                    >
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h4>Material</h4>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select 
+                        class="form-control" 
+                        name="genre"
+                        ng-model="genre"
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('genre') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Sport-Typ</label>
+                    <select 
+                        class="form-control" 
+                        name="sport_type" 
+                        ng-model="sport_type" 
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('sport_type') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Runtime</label>
+                    <input
+                    	ng-model="run_time"
+                        type="text" 
+                        name="run_time" 
+                        class="form-control" 
+                        placeholder="Runtime"
+                    >
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Land</label>
+                    <select
+                        class="form-control"
+                        name="country"
+                        ng-model="country" 
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('country') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Lizenz-Geber (Licensors)</label>
+                    <input
+                    	ng-model="licensors"
+                        type="text" 
+                        name="licensors"
+                        class="form-control" 
+                        placeholder="Lizenz-Geber"
+                    >
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Copyright</label>
+                    <input
+                    	ng-model="copyright"
+                        type="text" 
+                        name="copyright"
+                        class="form-control" 
+                        placeholder="Copyright"
+                    >
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <select 
+                        class="form-control" 
+                        name="rating"
+                        ng-model="rating" 
+                    >
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('rating') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Start</label>
+                    <input
+                    	ng-model="license_start"
+                        type="text" 
+                        name="license_start" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Start"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Ende (Datum)</label>
+                    <input
+                        ng-model="license_end"
+                        type="text"
+                        name="license_end" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Ende (Datum)"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes (Anzahl)</label>
+                    <input
+                        ng-model="legal_runtime"
+                        type="text" 
+                        name="legal_runtime" 
+                        class="form-control" 
+                        placeholder="Lizenz-Runtimes (Anzahl)"
+                    >
+                </div>
+            </div>
+        </div>
+        <textarea class="form-control" rows="3" name="content_tags"></textarea>
+        
+        <hr>
+        <div id='sfdescription_zone'>
+            <h3>Beschreibung</h3>
+            <div class="row">
+                <div class="col-xs-3 col-md-3">
+                    <div class="form-group" >
+                        <label>Beschreibung</label>
+                        <textarea 
+                            ng-model="long_description"
+                            name="description[long_description]"
+                            class="form-control"
+                            placeholder="Beschreibung"
+                        >
+                        </textarea>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-md-2">
+                    <div class="form-group" >
+                        <label>Sprache</label>
+                        <select
+                            class="form-control" 
+                            name="description[language]"
+                        >
+                            <?php foreach (\Application\Form\OptionsConfig::getFormOption('sf_language') as $optIndex => $optName): ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-md-2">
+                    <div class="form-group" >
+                        <label>Beschreibungstyp</label>
+                        <select
+                            class="form-control" 
+                            name="description[type]"
+                        >
+                            <?php foreach (\Application\Form\OptionsConfig::getFormOption('sf_description') as $optIndex => $optName): ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <hr>
+        
+        <div id='sffighter_zone'>
+            <h3>Kämpfer</h3>
+            <div class="row" >
+                <div class="col-xs-3 col-md-3">
+                    <div class="form-group" >
+                        <label>Name*</label>
+                        <input
+                            type="hidden"
+                            class="fighter"
+                            name="fighter"
+                        >
+                        <input
+                            ipm-autocomplete 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Kämpfer"
+                            ng-model="fighter"
+                            >
+                    </div>                        
+                </div>
+            </div>
+        </div>
+        <hr>
+        
+        <div id='sfartwork_zone'>
+            <h3>Artwork</h3>
+            <div class="row">
+                <div class="col-xs-2 col-md-2">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="artwork[file_name]" placeholder="Dateiname"/>
+                    </div>
+                </div>
+                <div class="col-xs-2 col-md-2">
+                    <div class="form-group">
+                        <select
+                            class="form-control"
+                            ng-model="file_type"
+                            name="artwork[file_type]"
+                        >
+                            <?php foreach (\Application\Form\OptionsConfig::getFormOption('file_upload_type') as $optIndex => $optName): ?>
+                                <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+        
+
+            
+        
+        <hr>
+        <input type="submit" class="btn btn-default" value="Suchen">
+    </form>
+</div>

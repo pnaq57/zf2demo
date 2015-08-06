@@ -1,0 +1,131 @@
+<h4>Kampf</h4>
+<div class="row">
+   <div class="col-xs-6 col-md-6">
+       <div class="form-group">
+           <label>1. Kämpfer</label>
+           <input type="text" ng-model="fighter" class="fighterAuto form-control" placeholder="1. Kämpfer">
+           <input type="hidden" name="fighter" ng-model="fighter" class="form-control fighter" >  
+       </div>
+   </div>
+   <div class="col-xs-6 col-md-6">
+       <div class="form-group">
+           <label>2. Kämpfer</label>
+           <input type="text" ng-model="fighter_b" class="fighterAuto form-control" placeholder="2. Kämpfer">
+           <input type="hidden" name="fighter_b" ng-model="fighter_b" class="form-control fighter" >
+       </div>
+   </div>
+</div>
+<div class="row">
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Date of fight</label>
+            <input 
+                ng-model="fight_date"
+                type="text" 
+                name="fight_date"
+                
+                class="form-control ipm_datepicker" 
+                placeholder="Date of fight"
+            >
+        </div>
+    </div>
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Location of fight</label>
+           <input 
+                ng-model="fight_where"
+                type="text" 
+                name="fight_where"                
+                class="form-control" 
+                placeholder="Location of fight"
+            >
+        </div>
+    </div>
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Gender</label>
+            <select class="form-control" name="gender" >
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('gender') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Type of fight</label>
+            <select class="form-control" name="fight_type" ng-model="fight_type" >
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('fight_type') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Rounds of fight</label>
+             <select class="form-control" name="rounds"  ng-model="rounds">
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('rounds') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-4 col-md-4">
+        <div class="form-group" >
+            <label>Weightclass</label>
+            <select class="form-control" name="weight_class"  ng-model="weight_class" >
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('weight_class') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 col-md-3">
+        <div class="form-group" >
+            <label>Titlefight</label>
+            <!--TODO-->
+            <select class="form-control" name="fight_title" multiple >
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('fight_title') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-3 col-md-3">
+        <div class="form-group" >
+            <label>Winner</label>
+            <input type="text" name="winner" class="form-control"  placeholder="Winner">
+        </div>
+    </div>
+    <div class="col-xs-3 col-md-3">
+        <div class="form-group" >
+            <label>Result</label>
+            <select class="form-control" name="result" ng-model="result" >
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('result') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-3 col-md-3">
+        <div class="form-group" ng-show="result=='KO' || result=='TKO'">
+            <label>Round (KO/TKO)</label>
+            <select class="form-control" name="result_round"  ng-model="result_round" >
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('result_round') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>

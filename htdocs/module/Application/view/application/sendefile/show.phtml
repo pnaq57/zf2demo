@@ -1,0 +1,91 @@
+<?php if (isset($this->file)): ?>
+<h3>Sende-Datei: <?php echo $this->file->getName() ?></h3>
+
+<div class="flowplayer" data-swf="<?php echo $this->basePath(); ?>/flowplayer.swf" data-ratio="0.4167">
+    <video>
+        <source type="video/webm" src="<?php echo $this->basePath(); ?>/storage/<?php echo $this->file->getStorage() ?>/VA_FILES/<?php echo $this->file->getName() ?>/<?php echo $this->file->getName() ?>.webm">
+        <source type="video/mp4" src="<?php echo $this->basePath(); ?>/storage/<?php echo $this->file->getStorage() ?>/VA_FILES/<?php echo $this->file->getName() ?>/<?php echo $this->file->getName() ?>.mp4">
+    </video>
+</div>
+
+<hr />
+
+<h4>Algemeines</h4>
+<div class="row">
+  <div class="col-md-2">Status: <?php echo $this->file->getFileIndex()->getStatus() ?></div>
+  <div class="col-md-2">Dateiname: <?php echo $this->file->getName() ?></div>
+  <div class="col-md-2">Storage: <?php echo $this->file->getStorage() ?></div>
+  <div class="col-md-2">Titel: <?php echo $this->file->getTitle() ?></div>
+  <div class="col-md-2">Produkt-Jahr: <?php echo $this->file->getProductYear() ?></div>
+
+</div>
+<hr />
+
+<h4>Material</h4>
+<div class="row">
+  <div class="col-md-2">Genre: <?php echo $this->file->getGenre() ?></div>
+  <div class="col-md-2">Sport-Typ: <?php echo $this->file->getSportType() ?></div>
+  <div class="col-md-2">Runtime: <?php echo $this->file->getRunTime() ?></div>
+  <div class="col-md-2">Land: <?php echo $this->file->getCountry() ?></div>
+  <div class="col-md-2">Linzenz-Geber: <?php echo $this->file->getLicensors() ?></div>
+  <div class="col-md-2">Copy-right: <?php echo $this->file->getCopyRight() ?></div>
+</div>
+<div class="row">
+  <div class="col-md-2">Rating: <?php echo $this->file->getRating() ?></div>
+  <div class="col-md-2">Lizenz-Start: <?php echo $this->file->getLicenseStart()->format('d.m.Y') ?></div>
+  <div class="col-md-2">Lizenzende: <?php echo $this->file->getLicenseEnd()->format('d.m.Y') ?></div>
+  <div class="col-md-2">Lizenz-Runtimes: <?php echo $this->file->getLegalRuntime() ?></div>
+</div>
+<hr />
+<h4>Tags</h4>
+<div class="row">
+  <div class="col-md-12"><?php echo $this->file->getContentTags() ?></div>
+</div>
+<?php if ($this->file->getSfDescriptions()->count() > 0): ?>
+    <hr />
+    <h4>Beschreibung</h4>
+    <?php foreach ($this->file->getSfDescriptions() as $des): ?>
+        <div class="row">
+            <div class="col-md-3">Kurzbeschreibung: <?php echo $des->getShortDescription() ?></div>
+            <div class="col-md-6">Beschreibung: <?php echo $des->getLongDescription() ?></div>
+            <div class="col-md-2">Sprache: <?php echo $des->getLanguage() ?></div>
+            <div class="col-md-1">Beschreibungstyp: <?php echo $des->getType() ?></div>
+        </div>
+    <?php endforeach; ?>
+<?php endif ?>
+
+<?php if ($this->file->getFighters()->count() > 0): ?>
+    <hr />
+    <h4>Kämpfer</h4>
+    <?php foreach ($this->file->getFighters() as $fighter): ?>
+        <div class="row">
+            <div class="col-md-3">Vorname: <?php echo $fighter->getFirstname() ?></div>
+            <div class="col-md-3">Nachname: <?php echo $fighter->getLastname() ?></div>
+            <div class="col-md-4">Vollname: <?php echo $fighter->getFullname() ?></div>
+            <div class="col-md-2">Kürzel: <?php echo $fighter->getLastnameShortcut() ?></div>
+        </div>
+    <?php endforeach; ?>
+<?php endif ?>
+    
+<?php if ($this->file->getArtwork()->count() > 0): ?>
+    <hr />
+    <h4>Artwork</h4>
+    <?php foreach ($this->file->getArtwork() as $art): ?>
+        <div class="row">
+            <div class="col-md-3">Dateiname: <?php echo $art->getFileName() ?></div>
+            <div class="col-md-6">Path: <?php echo $art->getFilePath() ?></div>
+            <div class="col-md-2">Typ: <?php echo $art->getFileType() ?></div>
+        </div>
+    <?php endforeach; ?>
+<?php endif ?>
+
+
+
+<?php endif; ?>
+
+
+
+
+
+
+

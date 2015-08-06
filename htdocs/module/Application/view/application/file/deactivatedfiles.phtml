@@ -1,0 +1,55 @@
+<h3>Deaktivierte Archiv-Dateien</h3>
+<p>Auf dieser Seite sehen Sie deaktivierte Archiv-Dateien.</p>
+<hr />
+<?php echo $this->partial(
+    'partials/application/form/filter/filterforpagination.phtml',
+    array(
+        'filterAction' => 'archivefiles/deactivatedfiles',
+        'route' => 'archivefiles',
+        'action' => array('action' => 'deactivatedfiles'),
+        'status' => $this->status,
+        'limit' => $this->limit
+    )); ?>
+<hr />
+<?php $paging = $this->paginationHelper($this->archiveFiles, $this->page, '/archivefiles/', $this->limit, $this->status); ?>
+<?php if (!empty($paging)): ?>
+    <div class="paging">    
+        <?php echo $paging; ?>
+    </div>
+    <hr />
+<?php endif; ?> 
+
+
+<?php if (isset($this->archiveFiles) && count($this->archiveFiles) > 0): ?>
+<table ng-hide="createFileBnt" class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>Kämpfer</th>
+          <th>Status</th>
+          <th>Erstellungszeitpunkt</th>
+          <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->archiveFiles as $archiveFile): ?>
+    <tr>
+        <td><?php echo $archiveFile->getId() ?></td>
+        <td><?php echo $archiveFile->getFighterA()->getFullname() ?> / <?php echo $archiveFile->getFighterB()->getFullname() ?></td>
+        <td><?php echo $archiveFile->getFileIndex()->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+        <td><?php echo $archiveFile->getFileIndex()->getStatus() ?></td>
+        <td>
+            <a href="<?php 
+            echo $this->url(
+                'archivefile', 
+                array(
+                    'action' => 'activate',
+                    'id' => $archiveFile->getId()
+                )
+            )  ?>"><div class="btn btn-default">Aktivieren</div></a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>

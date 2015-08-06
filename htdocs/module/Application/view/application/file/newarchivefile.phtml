@@ -1,0 +1,273 @@
+
+<div ng-controller="FormCtrl">
+
+    <form name="archive_file_form" novalidate method="POST" action="<?php echo $this->url('archivefile', array('action' => 'newarchivefile'))  ?>">
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group">
+                    <label for="name">Dateiname</label>
+                    <input type="text" name="name" class="form-control"  placeholder="Dateiname eingeben" readonly>
+                     <span ng-show="archive_file_form.name.$error.required">name is required.</span>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    <label for="name">Status</label>
+                    <select class="form-control" name="status">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('status') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="path">Datei-Quelle</label>
+            <input type="text" name="path" class="form-control" placeholder="Datei-Quelle eingeben" readonly>
+        </div>
+        <hr />
+
+        <div class="checkbox">
+            <label class="checkbox-inline">
+                <input name="comment" type="checkbox" value="y" ng-model="commentChecked" > Kommentar -> yes       
+            </label>
+        </div>
+        <div class="form-group" ng-show="commentChecked">
+            <select class="form-control" name="comment_lang" ng-disabled="commentChecked==false" disabled>
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <select class="form-control" name="comment_audio_channel" ng-disabled="commentChecked==false" disabled>
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('comment_audio_channel') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <hr />
+        
+        <div class="checkbox">
+            <label class="checkbox-inline">
+                <input name="moderator" type="checkbox" value="y" ng-model="moderatorChecked"> Moderator       
+            </label>
+        </div>
+        <div class="form-group" ng-show="moderatorChecked">
+            <select class="form-control" name="moderator_lang" ng-disabled="moderatorChecked==false" disabled>
+                <option></option>
+                <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>
+                    <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <hr />
+        <div class="checkbox">
+            <label class="checkbox-inline">
+                <input name="atmosphere" type="checkbox" value="y" > Atmosphäre       
+            </label>
+        </div>
+        <hr />
+        
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    Resolution
+                    <select class="form-control" name="resolution">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('resolution') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    Scale
+                    <select class="form-control" name="scale">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('scale') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>            
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    Quality
+                    <select class="form-control" name="quality">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('quality') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>        
+        <hr />
+        <div class="checkbox">
+            <label class="checkbox-inline">
+                <input name="graphic" type="checkbox" value="y"> Graphic -> yes       
+            </label>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    Graphic Style
+                    <select class="form-control" name="graphicstyle">
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('graphicstyle') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    graphic broadcast station
+                    <select class="form-control" name="graphic_broadcast_station" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('graphic_broadcast_station') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    <input type="text" name="legalaffiars_from" class="form-control"  placeholder="legalaffiars from (01.12.2015)">
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="form-group" >
+                    <input type="text" name="legalaffiars_to" class="form-control"  placeholder="legalaffiars to (30.12.2015)">
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <input type="text" name="fight_date" class="form-control"  placeholder="fight date (01.12.2015)">
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <input type="text" name="fight_where" class="form-control"  placeholder="where">
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group" >
+                    <input type="text" name="rounds" class="form-control"  placeholder="rounds">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    fight_type
+                    <select class="form-control" name="fight_type" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('fight_type') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    gender
+                    <select class="form-control" name="gender" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('gender') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    weight_class
+                    <select class="form-control" name="weight_class" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('weight_class') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    result
+                    <select class="form-control" name="result" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('result') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    nationality_fighter_a
+                    <select class="form-control" name="nationality_fighter_a" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    nationality_fighter_b
+                    <select class="form-control" name="nationality_fighter_b" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    fight_title
+                    <select class="form-control" name="fight_title" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('fight_title') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    winner
+                    <select class="form-control" name="winner" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('winner') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div> 
+        <hr />
+        <textarea class="form-control" rows="3" name="tags" placeholder="Tags"></textarea>
+        <hr />
+
+        <div id='marker_zone'></div>
+        <ipm-add-marker></ipm-add-marker>
+        
+        <hr />
+        <input type="submit" class="btn btn-default" ng-disabled="archive_file_form.$invalid" value="Save">
+    </form>
+
+</div>

@@ -1,0 +1,198 @@
+ <h4>Material</h4>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                	<label>TC Start (HH:MM:SS:FF)</label>
+                    <input
+                        ng-blur="tc_start=changeTimeCode(tc_start)"
+                        ng-model="tc_start"
+                        type="text" 
+                        name="tc_start"
+                        
+                        class="form-control" 
+                        placeholder="TC Start (HH:MM:SS:FF)"
+                    >
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>TC Ende (HH:MM:SS:FF)</label>
+                    <input
+                        ng-blur="tc_end=changeTimeCode(tc_end)"
+                        ng-model="tc_end"
+                        type="text" 
+                        name="tc_end"                        
+                        class="form-control" 
+                        placeholder="TC Ende (HH:MM:SS:FF)"
+                    >
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                <label>TC Dauer (HH:MM:SS:FF)</label>
+                    <input
+                        ng-blur="length=changeTimeCode(length)"
+                        ng-model="length"
+                        type="text" 
+                        name="length"
+                        
+                        class="form-control" 
+                        placeholder="TC Dauer (HH:MM:SS:FF)"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-md-4">
+                <div class="form-group">
+                    <label>Lizenz-Start</label>
+                    <input
+                    	ng-model="legalaffiars_from"
+                        
+                        type="text" 
+                        name="legalaffiars_from" 
+                        class="form-control ipm_datepicker" 
+                        placeholder="Lizenz-Start"
+                    >                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group" >
+                    <label>Lizenz-Ende</label>
+                    <br /><input type="checkbox" name="no_legalaffiars_to"  ng-model="no_legalaffiars_to" ng-init="no_legalaffiars_to=true" ng-checked="no_legalaffiars_to" /> Kein Lizenzende           
+                 </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="no_legalaffiars_to" ng-show="no_legalaffiars_to==false">
+                <div class="form-group">
+                    <label>Lizenz-Ende (Datum)</label>
+                    <input
+                        ng-model="legalaffiars_to"
+                        placeholder="Lizenz-Ende (Datum)"
+                        type="text" 
+                        name="legalaffiars_to" 
+                        class="form-control ipm_datepicker"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes</label>
+                    <br /><input type="checkbox" name="unlimited_runtime"  ng-model="unlimited_runtime" ng-init="unlimited_runtime=true" ng-checked="unlimited_runtime" /> Unendlich            
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-hide="unlimited_runtime" ng-show="unlimited_runtime==false">
+                <div class="form-group">
+                    <label>Lizenz-Runtimes (Anzahl)</label>
+                    <input
+                        ng-model="legal_runtime"
+                        type="text" 
+                        name="legal_runtime" 
+                        class="form-control" 
+                        placeholder="Lizenz-Runtimes (Anzahl)"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                    <label>Kommentar</label>
+					<br />
+                    <label class="checkbox-inline">
+                        <input name="comment" class="checkbox" type="checkbox" data-toggle="toggle" value="y" ng-init="commentChecked=false" ng-model="commentChecked" ng-checked="commentChecked">
+                         Ja
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="commentChecked" ng-hide="commentChecked==false">
+                <div class="form-group">
+                	<label>Sprache</label>
+                    <select class="form-control" name="comment_lang" ng-disabled="commentChecked==false" disabled >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('language') as $optIndex => $optName): ?>                    
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="commentChecked" ng-hide="commentChecked==false">
+                <div class="form-group">
+                	<label>Channel</label>
+                    <select class="form-control" name="comment_audio_channel" ng-disabled="commentChecked==false" disabled  ng-model="comment_audio_channel" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('comment_audio_channel') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+                <div class="form-group">
+                	<label>Graphic</label>
+                        <input name="graphic" class="checkbox" type="checkbox" data-toggle="toggle" value="y" ng-init="graphicChecked=false" ng-model="graphicChecked" ng-checked="graphicChecked" >
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4" ng-show="graphicChecked" ng-hide="graphicChecked==false">
+                <div class="form-group">
+                	<label>Graphic comment</label>
+                    <input
+                        type="text" 
+                        name="graphic_input"
+                        class="form-control" 
+                        placeholder="Graphic comment"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                 <div class="form-group">
+                     <label>Sound</label>
+                        <select class="form-control" name="sound"  ng-model="sound" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('sound') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+             <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Scale</label>
+                    <select class="form-control" name="scale"  ng-model="scale" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('scale') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label>Resolution</label>
+                    <select class="form-control" name="resolution"  ng-model="resolution" >
+                        <option></option>
+                        <?php foreach (\Application\Form\OptionsConfig::getFormOption('resolution') as $optIndex => $optName): ?>
+                            <option value="<?php echo $optIndex; ?>"> <?php echo $optName; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" ng-show="resolution == 'other'">
+                    <label>Resolution (other)</label>
+                    <input
+                        type="text" 
+                        name="resolution_input"                  
+                        class="form-control" 
+                        placeholder="Resolution (other)"
+                    >
+                </div>
+            </div>
+        </div>

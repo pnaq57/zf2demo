@@ -1,0 +1,112 @@
+<?php if (isset($this->archiveFile)): ?>
+<?php $languages = \Application\Form\OptionsConfig::getFormOption('language'); ?>
+<?php $statusOptions = \Application\Form\OptionsConfig::getFormOption('language'); ?>
+
+<div class="flowplayer" data-swf="<?php echo $this->basePath(); ?>/flowplayer.swf" data-ratio="0.4167">
+    <video>
+        <source type="video/mp4" src="<?php echo $this->basePath(); ?>/storage/<?php echo $this->archiveFile->getStorage() ?>/VA_FILES/<?php echo $this->archiveFile->getName() ?>/<?php echo $this->archiveFile->getName() ?>.mp4">
+        <source type="video/mp4" src="<?php echo $this->basePath(); ?>/storage/<?php echo $this->archiveFile->getStorage() ?>/VA_FILES/<?php echo $this->archiveFile->getName() ?>/<?php echo $this->archiveFile->getName() ?>.mp4">
+    </video>
+</div>
+
+<hr />
+
+<h4>Datei-Info</h4>
+<div class="row">
+  <div class="col-md-2">Status: <?php echo $this->archiveFile->getFileIndex()->getStatus() ?></div>
+  <div class="col-md-2">Dateiname: <?php echo $this->archiveFile->getId() ?></div>
+  <div class="col-md-2">Quelle: <?php echo $this->archiveFile->getPath() ?></div>
+  <div class="col-md-2">Atmosphäre: <?php echo $this->archiveFile->getAtmosphere() ?></div>
+  <div class="col-md-2">Resolution: <?php echo $this->archiveFile->getResolution() ?></div>
+  <div class="col-md-2">Scale: <?php echo $this->archiveFile->getScale() ?></div>
+
+</div>
+<hr />
+
+<h4>Datei-Info</h4>
+<div class="row">
+  <div class="col-md-2">Graphik: <?php echo $this->archiveFile->getGraphic() ?></div>
+  <div class="col-md-2">Graphikstyle: <?php echo $this->archiveFile->getGraphicstyle() ?></div>
+  <div class="col-md-2">Graphic Broadcast Station: <?php echo $this->archiveFile->getGraphicBroadcastStation() ?></div>
+  <div class="col-md-2">Qualität: <?php echo $this->archiveFile->getQuality() ?></div>
+  <div class="col-md-2">Legalaffiars (von): <?php echo ($this->archiveFile->getLegalaffiarsFrom()) ? $this->archiveFile->getLegalaffiarsFrom()->format('d.m.Y') : '' ?></div>
+  <div class="col-md-2">Legalaffiars (bis): <?php echo ($this->archiveFile->getLegalaffiarsTo()) ? $this->archiveFile->getLegalaffiarsTo()->format('d.m.Y') : '' ?></div>
+</div>
+<hr />
+
+<h4>Datei-Info</h4>
+<div class="row">
+  <div class="col-md-2">Kommentar: <?php echo $this->archiveFile->getComment() ?></div>
+  <div class="col-md-2">Kommentarsprache: <?php if ($this->archiveFile->getComment() == 'y'): ?>
+            <?php echo $this->archiveFile->getCommentLang() ?>
+      <?php endif; ?>
+  </div>
+  <div class="col-md-2">Moderator: <?php echo $this->archiveFile->getModerator() ?></div>
+  <div class="col-md-2">Moderatorsprache: <?php if ($this->archiveFile->getModerator() == 'y'): ?>
+            <?php echo $this->archiveFile->getCommentLang() ?>
+      <?php endif; ?>
+  </div>
+  <div class="col-md-2">Interview: <?php echo $this->archiveFile->getInterview() ?></div>
+
+</div>
+<hr />
+
+
+<h4>Kampf-info</h4>
+<div class="row">
+  <div class="col-md-2">Kampfdatum: <?php echo ($this->archiveFile->getFightDate()) ? $this->archiveFile->getFightDate()->format('d.m.Y') : '' ?></div>
+  <div class="col-md-2">Wo: <?php echo $this->archiveFile->getFightWhere() ?></div>
+  <div class="col-md-2">Kampftyp: <?php echo $this->archiveFile->getFightType() ?></div>
+  <div class="col-md-2">Runde(n): <?php echo $this->archiveFile->getRounds() ?></div>
+  <div class="col-md-2">Kampf-Titel: <?php echo ($this->archiveFile->getFightTitle() && is_array($this->archiveFile->getFightTitle())) ? implode(', ', $this->archiveFile->getFightTitle()) : '' ?></div>
+  <div class="col-md-2">Kampfergebnis: <?php echo $this->archiveFile->getResult() ?></div>
+</div>
+<hr />
+
+<h4>Kämpfer-Info</h4>
+<div class="row">
+  <div class="col-md-2">Kämpfer A: <?php echo $this->archiveFile->getFighterA()->getFullname() ?></div>
+  <div class="col-md-2">Kämpfer B: <?php echo $this->archiveFile->getFighterB()->getFullname() ?></div>
+  <!--
+  <div class="col-md-2">Nationalität vom Kämpfer A: <?php //echo $languages[$this->archiveFile->getNationalityFighterA()] ?></div>
+  <div class="col-md-2">Nationalität vom Kämpfer B: <?php //echo $languages[$this->archiveFile->getNationalityFighterB()] ?></div>
+  -->
+  <div class="col-md-2">Gewichtklasse: <?php echo $this->archiveFile->getWeightClass() ?></div>
+  <div class="col-md-2">Gewinner: <?php echo $this->archiveFile->getWinner() ?></div>
+</div>
+
+<hr />
+<h4>Tags</h4>
+<div class="row">
+  <div class="col-md-12"><?php echo $this->archiveFile->getTags() ?></div>
+</div>
+<hr />
+
+<h4>Marker</h4>
+<?php if (null != ($tapes = $this->archiveFile->getTapes()) && $this->archiveFile->getTapes()->count() > 0): ?>
+    <?php $i = 0; foreach ($this->archiveFile->getTapes() as $t): ?>
+        <?php if (($i%4) == 0): ?>
+            <div class="row">
+        <?php endif; ?>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">Aktion: <?php echo $t->getAction() ?></div>
+                    <div class="col-md-8">Zeitpunkt: <?php echo $t->getActionFrom() ?></div>
+                </div>
+            </div>
+        <?php $i++; ?>
+        <?php if (($i%4) == 0): ?>
+            </div>
+        <?php endif;?>
+    <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php endif; ?>
+
+
+
+
+
+
+

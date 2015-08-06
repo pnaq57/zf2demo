@@ -1,0 +1,76 @@
+<h2><?php echo ($this->title) ?: 'Datei bearbeiten' ?></h2>
+<hr/>
+<?php $file = $this->file; ?>
+<p>Dateiname: <?php echo $file->getFileName() ?></p>
+<p>Erstellungsdatum: <?php echo $file->getCreatedAt()->format('d.m.Y H:i:s') ?></p>
+<p>Letzte Aktualisierungdatum: <?php echo $file->getUpdatedAt()->format('d.m.Y H:i:s') ?></p>
+<hr/>
+<?php
+// Init Form
+$form = $this->form;
+$form->setAttribute('class', 'form-horizontal');
+
+$form->setAttribute('action', $this->url('file-upload', array('action' => 'edit')));
+$form->prepare();
+// Configure Errors Helper
+$errorsHelper  = $this->plugin('formelementerrors');
+$errorsHelper
+    ->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>');
+?>
+<?php echo $this->form()->openTag($form); ?>
+    
+    <?php
+    $idElem = $form->get('id');
+    echo $this->formHidden($idElem);
+    $elem = $form->get('file_type');
+    $elem->setLabelAttributes(array('class' => 'control-label'));
+    $errors = $elem->getMessages();
+    $errorClass = (!empty($errors)) ? ' error' : '';
+    ?>
+<div class="row">
+    <div class="col-xs-2 col-md-2">
+         <div class="control-group<?php echo $errorClass ?>">
+            <div class="controls">
+                <?php echo $this->formSelect($elem); ?>
+                <?php echo $errorsHelper($elem); ?>
+                <span ng-show="<?php echo $form->getName() ?>.<?php echo $elem->getName() ?>.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-6">
+        <?php
+            $elem = $form->get('file');
+            $elem->setLabelAttributes(array('class' => 'control-label'));
+            $errors = $elem->getMessages();
+            $errorClass = (!empty($errors)) ? ' error' : '';
+        ?>
+        <div class="control-group<?php echo $errorClass ?>">
+            <div class="controls">
+                <?php echo $this->formFile($elem); ?>
+                 <?php if (!empty($this->tempFiles)) { ?>
+                    <!--
+                    Note: You might not want to render the file input in this
+                    case either, depending on your use-case.
+                    -->
+                    <div class="help-block">
+                        Uploaded: <ul>
+                        <?php foreach ($this->tempFiles as $tempFile) { ?>
+                            <li><?php echo $this->escapeHtml($tempFile['name']) ?></li>
+                        <?php } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-2 col-md-2">
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-primary" ng-disabled="<?php echo $form->getName() ?>.$invalid">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag($form); ?>

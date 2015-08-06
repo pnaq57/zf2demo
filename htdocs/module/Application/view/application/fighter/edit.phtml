@@ -1,0 +1,54 @@
+<h3>Kämpfer bearbeiten</h3> 
+<p>Bearbeiten Sie die zum Kämpfer hinterlegten Daten über nachstehendes Formular.</p>
+<hr />
+<div ng-controller="FormCtrl">
+    <form name="edit_fighter" novalidate method="POST" action="<?php echo $this->url('fighter', array('action' => 'edit'))  ?>">
+        <input type="hidden" name="id" value="<?php echo $this->fighter->getId(); ?>">
+        <div class="row">
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group">
+                    <label for="name">Vorname*</label>
+                    <input 
+                        type="text" 
+                        class="form-control"
+                        ng-init="firstname='<?php echo $this->fighter->getFirstname();?>'"
+                        ng-model="firstname"
+                        name="firstname" 
+                        value="<?php echo $this->fighter->getFirstname();?>" 
+                        placeholder="Vorname"
+                        required="">
+                    <span ng-show="edit_fighter.firstname.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label for="name">Nachname*</label>
+                    <input 
+                        type="text" 
+                        class="form-control"
+                        ng-init="lastname='<?php echo $this->fighter->getLastname();?>'"
+                        ng-model="lastname" 
+                        name="lastname" 
+                        value="<?php echo $this->fighter->getLastname();?>" 
+                        placeholder="Nachname"
+                        required="">
+                    <span ng-show="edit_fighter.lastname.$error.required">Dieses Feld ist ein Pflichtfeld.</span>
+                    <span ng-if="edit_fighter.lastname.$viewValue.length<3">Mindestens 3 Zeichen benötigt.</span>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label for="name">Vollständiger Name</label>
+                    <input type="text" class="form-control" value="<?php echo $this->fighter->getFullname();?>" disabled="">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <div class="form-group" >
+                    <label for="name">Kürzel</label>
+                    <input type="text" class="form-control" name="lastname" value="<?php echo $this->fighter->getLastnameShortcut();?>" disabled="">
+                </div>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-default" ng-disabled="edit_fighter.$invalid || edit_fighter.lastname.$viewValue.length<3" value="Änderungen speichern">
+    </form>
+</div>
